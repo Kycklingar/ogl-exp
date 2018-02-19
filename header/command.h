@@ -4,7 +4,8 @@
 class ICommand
 {
 public:
-    virtual void Execute() = 0;
+    virtual void ExecuteDown() = 0;
+    virtual void ExecuteUp() = 0;
 };
 
 #endif

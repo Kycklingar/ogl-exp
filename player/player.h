@@ -7,10 +7,14 @@ public:
     Player();
     ~Player();
     void draw();
-    void MoveRight();
-    void MoveLeft();
+
+    float _xDir;
+    float _yDir;
+
 private:
     float x, y;
+    float _xVel, _yVel;
+
     enum STATE
     {
         IDLE,

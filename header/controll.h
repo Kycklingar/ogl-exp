@@ -1,4 +1,4 @@
-#include <vector>
+//#include <vector>
 #include "command.h"
 
 class Controll
@@ -8,11 +8,11 @@ public:
     {
         if(command)
         {
-            _commands.push_back(command);
+            //_commands.push_back(command);
             command->Execute();
         }
     }
 
 private:
-    std::vector<ICommand *> _commands;
+    //std::vector<ICommand *> _commands;
 };

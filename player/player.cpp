@@ -18,8 +18,9 @@ Player::~Player()
 
 void Player::draw()
 {
+
     glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, -6.0f);
+    glTranslatef(x, y, -6.0f);
     glBegin(GL_TRIANGLES);
 
     if (_state == MOVING)
@@ -31,18 +32,31 @@ void Player::draw()
         glColor3f(0.0f, 1.0f, 0.0f);
     }
 
-    glVertex3f(x-0.1f, y-0.1f, 0.0f);
-    glVertex3f(x+0.1f, y-0.1f, 0.0f);
-    glVertex3f(x, y+0.1f, 0.0f);
+    glVertex3f(-0.1f, -0.1f, 0.0f);
+    glVertex3f(0.1f, -0.1f, 0.0f);
+    glVertex3f(0.0f, 0.1f, 0.0f);
     glEnd();
 }
 
-void Player::MoveLeft()
-{
-    x -= 0.1f;
-}
+// Player::Update(float deltaTime)
+// {
+//     _xVel += _xDir / 50.0f;
+//     if(_xVel > 0.1f)
+//         _xVel = 0.1f;
+//     if(_xVel < -0.1f)
+//         _xVel = -0.1f;
+//     x += _xVel;
+//     _xVel *= 0.50;
+//     if(_xVel < 0.0001f && _xVel > -0.0001f)
+//         _xVel = 0.0f;
 
-void Player::MoveRight()
-{
-    x += 0.1f;
-}
+//     _yVel += _yDir / 50.0f;
+//     if(_yVel > 0.1f)
+//         _yVel = 0.1f;
+//     if(_yVel < -0.1f)
+//         _yVel = -0.1f;
+//     y += _yVel;
+//     _yVel *= 0.50;
+//     if(_yVel < 0.0001f && _yVel > -0.0001f)
+//         _yVel = 0.0f;
+// }

@@ -2,10 +2,13 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <GL/glu.h>
+#include <map>
 
 #include "header/inputter.h"
-#include "header/controll.h"
+//#include "header/controll.h"
 #include "player/player.h"
+
+// using namespace std;
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -15,17 +18,24 @@ SDL_GLContext gGlContext;
 
 GLfloat rotation;
 
-Inputter inp;
-MoveLeft *left;
-MoveRight *right;
-Controll ctrl;
+std::map <SDL_Keycode, bool>keymap;
+std::map <SDL_Keycode, ICommand*>keyreg;
+
+//Inputter inp;
+//MoveLeft *left;
+//MoveRight *right;
+//MoveUp *up;
+//MoveDown *down;
+//Controll ctrl;
 
 Player player;
 
 void SetupController()
 {
-    left = new MoveLeft(&player);
-    right = new MoveRight(&player);
+    keyreg[SDLK_LEFT] = new MoveLeft(&player);
+    keyreg[SDLK_RIGHT] = new MoveRight(&player);
+    keyreg[SDLK_UP] = new MoveUp(&player);
+    keyreg[SDLK_DOWN] = new MoveDown(&player);
 }
 
 void SetOpenGLVersion()
@@ -69,7 +79,7 @@ void Display_Render()
 {
     glLoadIdentity();
     
-    glTranslated(inp.X, 0.0f, -6.0f);
+    glTranslated(0, 0.0f, -6.0f);
     glRotatef(rotation, 0.0f, 0.0f, 1.0f);
 
     //glRotatef(-rotation, 0.0f, 0.0f, 1.0f);
@@ -105,8 +115,11 @@ void close()
     SDL_DestroyWindow(gWindow);
     gWindow == NULL;
 
-    delete(left);
-    delete(right);
+    for(auto &k : keyreg)
+        delete(k.second);
+
+    // delete(left);
+    // delete(right);
 
     SDL_Quit();
 }
@@ -161,25 +174,23 @@ int main(int argc, char *argv[])
             switch(sdlEvent.type)
             {
                 case SDL_KEYDOWN:
-                    switch(sdlEvent.key.keysym.sym)
                     {
-                        case SDLK_LEFT:
-                            ctrl.StoreAndExecute(leftDown);
-                        break;
-                        case SDLK_RIGHT:
-                            ctrl.StoreAndExecute(rightDown);
-                        break;
+                        if(keymap[sdlEvent.key.keysym.sym] == true)
+                            break;
+                        keymap[sdlEvent.key.keysym.sym] = true;
+                        ICommand *c = keyreg[sdlEvent.key.keysym.sym];
+                        if(c == NULL)
+                            break;
+                        c->ExecuteDown();
                     }
                 break;
                 case SDL_KEYUP:
-                    switch(sdlEvent.key.keysym.sym)
                     {
-                        case SDLK_LEFT:
-                            ctrl.StoreAndExecute(leftUp);
-                        break;
-                        case SDLK_RIGHT:
-                            ctrl.StoreAndExecute(rightUp);
-                        break;
+                        keymap[sdlEvent.key.keysym.sym] = false;
+                        ICommand *c = keyreg[sdlEvent.key.keysym.sym];
+                        if(c == NULL)
+                            break;
+                        c->ExecuteUp();
                     }
                 break;
                 case SDL_QUIT:
